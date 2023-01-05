@@ -1,0 +1,13 @@
+name: Bowshot
+version: '${project.version}'
+main: bowshot.bowshot.Bowshot
+api-version: 1.19
+authors: [ Perdume ]
+
+commands:
+  Bowshot:
+    usage: "/Bowshot"
+    description: Bowshot
+  bowshotadmin:
+    usage: "?"
+    description: Bowshot admin
