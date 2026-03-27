@@ -29,6 +29,7 @@ public class WorldManage {
                     }
                 }
             } else {
+                // 8KB buffer reduces system calls vs 1KB default, matching typical filesystem block size
                 try (InputStream in = new BufferedInputStream(new FileInputStream(source));
                      OutputStream out = new BufferedOutputStream(new FileOutputStream(target))) {
                     byte[] buffer = new byte[8192];
