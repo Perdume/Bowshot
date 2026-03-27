@@ -19,7 +19,7 @@ public class UserManager {
     }
     public User getUser(Player player){
         for(User user: users){
-            if (user.getUniqueId() == player.getUniqueId()){
+            if (user.getUniqueId().equals(player.getUniqueId())){
                 return user;
             }
         }
@@ -29,7 +29,7 @@ public class UserManager {
     }
     public User getUser(UUID player){
         for(User user: users){
-            if (user.getUniqueId() == player){
+            if (user.getUniqueId().equals(player)){
                 return user;
             }
         }

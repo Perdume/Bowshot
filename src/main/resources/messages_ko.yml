@@ -1,0 +1,59 @@
+# Korean language file for Bowshot
+prefix: "&7[&6Bowshot&7]"
+
+game:
+  start-countdown: "&a{seconds}초후 게임이 시작됩니다 준비해주세요"
+  start: "&aStart"
+  force-ended: "게임이 강제로 종료되었습니다"
+  returning: "3초뒤 되돌아갑니다..."
+  time-up: "&c시간 초과로 최대 킬을 한 사람이 우승합니다"
+  glow-warning: "&c{minutes}분 남았습니다, 빠른 진행을 위해 발광을 켭니다"
+  not-found: "&c게임을 찾을 수 없습니다"
+
+match:
+  queue-count: "&aBowshot: {count}"
+  start-countdown: "{seconds}초 뒤에 게임이 시작됩니다"
+  cancelled: "매칭이 취소되었습니다"
+
+scoreboard:
+  title: "&6&oBOWSHOT"
+  separator: "&7&m-------------------------"
+  remaining-players: "&e남은인원&f: "
+  remaining-time: "&e남은시간&f: "
+
+result:
+  game-set: "&e==========GAME SET=========="
+  winner: "winner: {name}"
+  no-winner: "winner: X"
+  kill: "&6kill: {name}"
+  no-kill: "&6kill: X"
+  score-gain: "&aSCORE GET: +{score}"
+  score-loss: "&cSCORE LOST: {score}"
+
+rank:
+  unranked: "&7Unranked"
+  bronze: "&6Bronze"
+  silver: "&7Silver"
+  gold: "&eGold"
+  platinum: "&bPlatinum"
+  diamond: "&3Diamond"
+  master: "&5Master"
+  grandmaster: "&dGrandmaster"
+  placement: "&8배치중 ({current}/{total})"
+
+admin:
+  arena-created: "&6Arena created."
+  arena-removed: "&6Arena removed."
+  arena-exists: "&cThat arena already exists!"
+  arena-not-found: "&cThat arena doesn't exist!"
+  no-file: "&cNo File!"
+  player-only: "&cThis command can only be used by players."
+  unknown-command: "&cUnknown subcommand. Use /bowshotadmin help for a list of commands."
+  empty-list: "Empty"
+  done: "DONE"
+  saved: "SAVED"
+  wait: "Wait..."
+  deleting-world: "Deleting {name}"
+
+hologram:
+  ranking-title: "&aRANKING"

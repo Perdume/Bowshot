@@ -2,6 +2,8 @@ package Command;
 
 import Debug.ThreadState;
 import Game.Game;
+import Game.GameUtil;
+import Manager.MessageManager;
 import World.VisitToPlay;
 import bowshot.bowshot.Bowshot;
 import World.WorldManage;
@@ -23,63 +25,64 @@ import java.util.List;
 import java.util.Objects;
 
 public class admin implements CommandExecutor {
-    private final String PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "Bowshot" + ChatColor.GRAY + "]";
     private Bowshot bs = Bowshot.getPlugin(Bowshot.class);
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        MessageManager msg = bs.getMessageManager();
+        String prefix = msg.get("prefix");
         if(args.length == 0) {
-            sender.sendMessage(PREFIX + ChatColor.GOLD + "PVPGame by MisterMel");
-            sender.sendMessage(PREFIX + ChatColor.GRAY + "Use /pvpgame help for a list of commands.");
+            sender.sendMessage(prefix + ChatColor.GOLD + " Bowshot by Perdume");
+            sender.sendMessage(prefix + ChatColor.GRAY + " Use /bowshotadmin help for a list of commands.");
             return true;
         }
         if(args[0].equalsIgnoreCase("help")) {
-            sender.sendMessage(PREFIX + ChatColor.GOLD + "PVPGame Command Usage");
-            sender.sendMessage(PREFIX + ChatColor.GRAY + "/pvpgame - The main command");
-            sender.sendMessage(PREFIX + ChatColor.GRAY + "/pvpgame help - Shows this message.");
-            sender.sendMessage(PREFIX + ChatColor.GRAY + "/pvpgame add <Name> - Create an arena");
-            sender.sendMessage(PREFIX + ChatColor.GRAY + "/pvpgame remove <Name> - Remove an arena");
-            sender.sendMessage(PREFIX + ChatColor.GRAY + "/pvpgame setlobby <Name> - Set the lobby for an arena");
-            sender.sendMessage(PREFIX + ChatColor.GRAY + "/pvpgame setspawn <Name> - Set the spawn for an arena");
-            sender.sendMessage(PREFIX + ChatColor.GRAY + "/pvpgame setmainlobby - Set the main lobby");
+            sender.sendMessage(prefix + ChatColor.GOLD + " Bowshot Command Usage");
+            sender.sendMessage(prefix + ChatColor.GRAY + " /bowshotadmin - The main command");
+            sender.sendMessage(prefix + ChatColor.GRAY + " /bowshotadmin help - Shows this message.");
+            sender.sendMessage(prefix + ChatColor.GRAY + " /bowshotadmin add <Name> <filename> - Create an arena");
+            sender.sendMessage(prefix + ChatColor.GRAY + " /bowshotadmin remove <Name> - Remove an arena");
+            sender.sendMessage(prefix + ChatColor.GRAY + " /bowshotadmin setlobby <Name> - Set the lobby for an arena");
+            sender.sendMessage(prefix + ChatColor.GRAY + " /bowshotadmin setspawn <Name> - Set the spawn for an arena");
+            sender.sendMessage(prefix + ChatColor.GRAY + " /bowshotadmin setmainlobby - Set the main lobby");
             return true;
         }
         if(args[0].equalsIgnoreCase("add")) {
             if(args.length <= 2) {
-                sender.sendMessage(PREFIX + ChatColor.RED + "Use /pvpgame add <Name> <filename>");
+                sender.sendMessage(prefix + ChatColor.RED + " Use /bowshotadmin add <Name> <filename>");
                 return true;
             }
             String name = args[1];
             if(bs.arenaManager.exists(name)) {
-                sender.sendMessage(PREFIX + ChatColor.RED + "That arena already exists!");
+                sender.sendMessage(prefix + " " + msg.get("admin.arena-exists"));
                 return true;
             }
             for (String wl: Wl()){
                 if (Objects.equals(wl, args[2])){
                     bs.arenaManager.registerArena(name, wl);
-                    sender.sendMessage(ChatColor.GOLD + "Arena created.");
+                    sender.sendMessage(msg.get("admin.arena-created"));
                     return true;
                 }
             }
-            sender.sendMessage(PREFIX + ChatColor.RED + "No File!");
+            sender.sendMessage(prefix + " " + msg.get("admin.no-file"));
             return true;
         }
         if(args[0].equalsIgnoreCase("remove")) {
             if(args.length == 1) {
-                sender.sendMessage(PREFIX + ChatColor.RED + "Use /pvpgame remove <Name>");
+                sender.sendMessage(prefix + ChatColor.RED + " Use /bowshotadmin remove <Name>");
                 return true;
             }
             String name = args[1];
             if(!bs.arenaManager.exists(name)) {
-                sender.sendMessage(PREFIX + ChatColor.RED + "That arena doesn't exist!");
+                sender.sendMessage(prefix + " " + msg.get("admin.arena-not-found"));
                 return true;
             }
             bs.arenaManager.remove(name);
-            sender.sendMessage(ChatColor.GOLD + "Arena removed.");
+            sender.sendMessage(msg.get("admin.arena-removed"));
             return true;
         }
         if(args[0].equalsIgnoreCase("setspawn")) {
             if(!(sender instanceof Player)) {
-                sender.sendMessage(PREFIX + ChatColor.RED + "This command can only be used by players.");
+                sender.sendMessage(prefix + " " + msg.get("admin.player-only"));
                 return true;
             }
             VisitToPlay vtp = new VisitToPlay();
@@ -101,7 +104,7 @@ public class admin implements CommandExecutor {
         }
         if(args[0].equalsIgnoreCase("list")) {
             if (bs.arenaManager.getArenas().isEmpty()){
-                sender.sendMessage("Empty");
+                sender.sendMessage(msg.get("admin.empty-list"));
             }
             else{
                 sender.sendMessage("Areas: " + bs.arenaManager.getArenas().toString());
@@ -129,17 +132,17 @@ public class admin implements CommandExecutor {
                 pl.teleport((Location) bs.worldManager.getConfig().get("endloc"));
             }
             if (Bukkit.unloadWorld(s, true)) {
-                Path releaseFolder = Paths.get(bs.getDataFolder().getAbsolutePath() + "\\WorldList\\" + bs.we.Worlds.get(s));
+                Path releaseFolder = Paths.get(GameUtil.buildPath(bs.getDataFolder().getAbsolutePath(), "WorldList", bs.we.Worlds.get(s)));
                 String MixedName = s;
-                Path toFolder = Paths.get(Bukkit.getWorldContainer().getAbsolutePath() + "\\" + MixedName);
+                Path toFolder = Paths.get(GameUtil.buildPath(Bukkit.getWorldContainer().getAbsolutePath(), MixedName));
                 WorldManage wrma = new WorldManage();
                 WorldManage.deleteFilesRecursively(releaseFolder.toFile());
                 wrma.copyWorld(toFolder.toFile(), releaseFolder.toFile());
-                p.sendMessage("SAVED");
+                p.sendMessage(msg.get("admin.saved"));
             }
         }
         if(args[0].equalsIgnoreCase("WorldFiles")){
-            File dir = new File(bs.getDataFolder().getAbsolutePath() + "\\WorldList");
+            File dir = new File(GameUtil.buildPath(bs.getDataFolder().getAbsolutePath(), "WorldList"));
             File[] dirList = dir.listFiles();
             if (dirList != null) {
                 for(File f: dirList){
@@ -162,7 +165,7 @@ public class admin implements CommandExecutor {
             Player p = (Player) sender;
             bs.worldManager.getConfig().set("endloc", p.getLocation());
             bs.worldManager.saveconfig();
-            sender.sendMessage("DONE");
+            sender.sendMessage(msg.get("admin.done"));
         }
         if (args[0].equalsIgnoreCase("endworld")){
             for(Game g: bs.gamemanager.getGames()){
@@ -182,11 +185,17 @@ public class admin implements CommandExecutor {
             bs.scoremanager.getConfig().set(pl.getUniqueId().toString(), tt);
             bs.scoremanager.saveconfig();
         }
-        sender.sendMessage(PREFIX + ChatColor.RED + "Unknown subcommand. Use /pvpgame help for a list of commands.");
+        if (args[0].equalsIgnoreCase("reload")){
+            bs.getConfigManager().reloadConfig();
+            bs.getMessageManager().reload();
+            sender.sendMessage(prefix + ChatColor.GREEN + " Configuration reloaded.");
+            return true;
+        }
+        sender.sendMessage(prefix + " " + msg.get("admin.unknown-command"));
         return true;
     }
     private List<String> Wl(){
-        File dir = new File(bs.getDataFolder().getAbsolutePath() + "\\WorldList");
+        File dir = new File(GameUtil.buildPath(bs.getDataFolder().getAbsolutePath(), "WorldList"));
         List<String> RET = new ArrayList<>();
         File[] dirList = dir.listFiles();
         if (dirList != null) {

@@ -1,5 +1,6 @@
 package Area;
 
+import Game.GameUtil;
 import bowshot.bowshot.Bowshot;
 
 import java.io.File;
@@ -19,14 +20,9 @@ public class Arena {
         return name;
     }
     public File getWorldLoader(){
-        File fi = new File(bs.getDataFolder().getAbsolutePath() + "\\WorldList\\" + filename);
-        return fi;
+        return new File(GameUtil.buildPath(bs.getDataFolder().getAbsolutePath(), "WorldList", filename));
     }
     public String getfl(){
         return filename;
     }
-
-
-
-
 }

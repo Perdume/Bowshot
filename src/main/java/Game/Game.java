@@ -2,6 +2,8 @@ package Game;
 
 import Area.SubArena;
 import Debug.ThreadState;
+import Manager.MessageManager;
+import Score.Rank;
 import Score.score;
 import User.User;
 import bowshot.bowshot.Bowshot;
@@ -76,6 +78,7 @@ public class Game {
         tim.getTimer();
         end = false;
         AverageScore = sc.getAveragedScore();
+        MessageManager msg = bs.getMessageManager();
         for (User p: aaa.getPlayers()){
             p.getPlayer().setHealth(20);
             p.getPlayer().setFoodLevel(20);
@@ -88,16 +91,24 @@ public class Game {
                 p.getPlayer().removePotionEffect(effect.getType());
             }
             p.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10*20, 2, true));
-            p.getPlayer().sendMessage(ChatColor.GREEN + "SCORE: " + sc.getscore(p));
+            int playerScore = sc.getscore(p);
+            Rank playerRank = sc.getRank(p);
+            p.getPlayer().sendMessage(ChatColor.GREEN + "SCORE: " + playerScore + " " + playerRank.getDisplayName(msg));
+            int gamesPlayed = sc.getGamesPlayed(p);
+            int placementTotal = bs.getConfigManager().getPlacementMatches();
+            if (gamesPlayed < placementTotal) {
+                p.getPlayer().sendMessage(msg.get("rank.placement", "{current}", String.valueOf(gamesPlayed), "{total}", String.valueOf(placementTotal)));
+            }
             bs.sc.jointeam(p.getPlayer(), board);
 
         }
         start1();
     }
     private void start1(){
+        MessageManager msg = bs.getMessageManager();
         bs.gth.getGames().add(this);
         bs.gth.getThreads().put(this, thrt);
-        broadcast("15초후 게임이 시작됩니다 준비해주세요");
+        broadcast(msg.get("game.start-countdown", "{seconds}", String.valueOf(bs.getConfigManager().getPrepTime())));
         for (User u1: aaa.getPlayers()){
             for (User u2: aaa.getPlayers()){
                 if (u1 != u2){
@@ -134,12 +145,12 @@ public class Game {
 
         }.runTaskTimer(bs, 4L, 4L);
         new BukkitRunnable() {
-            int i = 16;
+            int i = bs.getConfigManager().getPrepTime() + 1;
             @Override
             public void run() {
                 i--;
                 if (end){
-                    Bukkit.broadcastMessage("게임이 강제로 종료되었습니다");
+                    broadcast(msg.get("game.force-ended"));
                     cancel();
                 }
                 if (i<6&&i>0){
@@ -147,8 +158,7 @@ public class Game {
                     broadcast(str);
                 }
                 if (i == 0) {
-                    String str = ChatColor.GREEN + "Start";
-                    broadcast(str);
+                    broadcast(msg.get("game.start"));
                     for (User u1: aaa.getPlayers()){
                         for (User u2: aaa.getPlayers()){
                             if (u1 != u2){
@@ -181,6 +191,16 @@ public class Game {
                 winner = p.getPlayer();
             }
         }
+        finishGame(winner);
+    }
+
+    public void Customend(Player win){
+        end = true;
+        finishGame(win);
+    }
+
+    private void finishGame(Player winner) {
+        MessageManager msg = bs.getMessageManager();
         for (User u1: aaa.getPlayers()){
             for (User u2: aaa.getPlayers()){
                 if (u1 != u2){
@@ -194,19 +214,22 @@ public class Game {
             }
         }
         for (User p: aaa.getPlayers()) {
-            p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage("&e==========GAME SET=========="));
-            p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage("winner:" + winner.getName()));
-            if (getkill() != null) {
-                p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage("&6kill:" + getkill().getName()));
+            p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage(msg.get("result.game-set")));
+            if (winner != null) {
+                p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage(msg.get("result.winner", "{name}", winner.getName())));
+            } else {
+                p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage(msg.get("result.no-winner")));
             }
-            else{
-                p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage("&6kill: X"));
+            if (getkill() != null) {
+                p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage(msg.get("result.kill", "{name}", getkill().getName())));
+            } else {
+                p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage(msg.get("result.no-kill")));
             }
             p.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-            p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage("&e============================"));
+            p.getPlayer().sendMessage(sendCenteredMessage.getCenteredMessage(msg.get("result.game-set")));
             p.getPlayer().getInventory().clear();
             tim.resetTimer();
-            p.getPlayer().sendMessage("3초뒤 되돌아갑니다...");
+            p.getPlayer().sendMessage(msg.get("game.returning"));
             sc.addscore(p, winner, AverageScore);
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(bs, new Runnable() {
@@ -224,11 +247,15 @@ public class Game {
             }
         }, 60);
     }
+
     private void updateScoreboard(Player player) {
+        MessageManager msg = bs.getMessageManager();
         User usr = bs.usermanager.getUser(player);
         int remainplayer = usr.getArena().getPlayers().size() - usr.getArena().getSpectators().size();
-        bs.sc.updatePerLine(board,"&e남은인원&f: ", "&e남은인원&f: " + remainplayer, 3);
-        bs.sc.updatePerLine(board,"&e남은시간&f: ", "&e남은시간&f: " + tim.getTime(), 2);
+        String rpKey = msg.get("scoreboard.remaining-players");
+        String rtKey = msg.get("scoreboard.remaining-time");
+        bs.sc.updatePerLine(board, rpKey, rpKey + remainplayer, 3);
+        bs.sc.updatePerLine(board, rtKey, rtKey + tim.getTime(), 2);
         endo();
     }
 
@@ -237,21 +264,24 @@ public class Game {
     }
 
     private void createScoreboard(Player player) {
+        MessageManager msg = bs.getMessageManager();
         User usr = bs.usermanager.getUser(player);
         int remainplayer = usr.getArena().getPlayers().size() - usr.getArena().getSpectators().size();
-        bs.sc.SetTitle("&6&oBOWSHOT", player.getWorld().getName(), board);
-        bs.sc.SetScore(4, "&7&m-------------------------", player.getWorld().getName(), board);
-        bs.sc.SetScore(3, "&e남은인원&f: " + remainplayer, player.getWorld().getName(), board);
-        bs.sc.SetScore(2, "&e남은시간&f: " + tim.getTime(), player.getWorld().getName(), board);
-        bs.sc.SetScore(1, "&7&m-------------------------", player.getWorld().getName(), board);
+        String separator = msg.get("scoreboard.separator");
+        bs.sc.SetTitle(msg.get("scoreboard.title"), player.getWorld().getName(), board);
+        bs.sc.SetScore(4, separator, player.getWorld().getName(), board);
+        bs.sc.SetScore(3, msg.get("scoreboard.remaining-players") + remainplayer, player.getWorld().getName(), board);
+        bs.sc.SetScore(2, msg.get("scoreboard.remaining-time") + tim.getTime(), player.getWorld().getName(), board);
+        bs.sc.SetScore(1, separator, player.getWorld().getName(), board);
     }
 
 
     private void TimeEvent(){
+        MessageManager msg = bs.getMessageManager();
         int t = (int) (System.currentTimeMillis() - tim.getTimer());
         int alltime = 6300 - t/50;
         if (alltime == 3600){
-            broadcast(ChatColor.RED + "3분 남았습니다, 빠른 진행을 위해 발광을 켭니다");
+            broadcast(msg.get("game.glow-warning", "{minutes}", "3"));
             for (User u: aaa.getPlayers()){
                 if (!u.isSpectator()){
                     u.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 120000, 2, false));
@@ -259,7 +289,7 @@ public class Game {
             }
         }
         if (alltime == 0){
-            broadcast(ChatColor.RED + "시간 초과로 최대 킬을 한 사람이 우승합니다");
+            broadcast(msg.get("game.time-up"));
             Customend(getkill());
         }
     }
@@ -280,51 +310,6 @@ public class Game {
         else{
             return p;
         }
-    }
-    public void Customend(Player win){
-        end = true;
-        Player winner = win;
-        for (User u1: aaa.getPlayers()){
-            for (User u2: aaa.getPlayers()){
-                if (u1 != u2){
-                    bs.sc.leaveteam(u1.getPlayer(), board);
-                    u1.getPlayer().showPlayer(u2.getPlayer());
-                    u1.getPlayer().setAllowFlight(false);
-                    for (PotionEffect effect : u1.getPlayer().getActivePotionEffects()) {
-                        u1.getPlayer().removePotionEffect(effect.getType());
-                    }
-                }
-            }
-        }
-        for (User p: aaa.getPlayers()) {
-            if (win != null){
-                p.getPlayer().sendMessage(ChatColor.GREEN + "winner: X");
-                p.getPlayer().sendMessage(ChatColor.GOLD + "kill:" + winner.getName());
-            }
-            else{
-                p.getPlayer().sendMessage(ChatColor.GREEN + "winner: X");
-                p.getPlayer().sendMessage(ChatColor.GOLD + "kill: X");
-            }
-            p.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-            p.getPlayer().getInventory().clear();
-            tim.resetTimer();
-            p.getPlayer().sendMessage("3초뒤 되돌아갑니다...");
-            sc.addscore(p, winner, AverageScore);
-        }
-        Bukkit.getScheduler().scheduleSyncDelayedTask(bs, new Runnable() {
-            @Override
-            public void run() {
-                for (Player pl: aaa.getSpawnLocation().getWorld().getPlayers()){
-                    User p = bs.usermanager.getUser(pl);
-                    p.setSpectator(false);
-                    bs.usermanager.removeuser(p.getPlayer());
-                }
-                aaa.ClearPlayers();
-                bs.gamemanager.removegame(getArena());
-                bs.gamemanager.getGames().remove(inc);
-                bs.vw.remove(Bukkit.getWorld(aaa.getArenaName()));
-            }
-        }, 60);
     }
 
 

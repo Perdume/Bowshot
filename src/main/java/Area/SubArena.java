@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SubArena {
@@ -54,19 +53,11 @@ public class SubArena {
 
     public List<User> getSpectators(){
         List<User> spe = new ArrayList<>();
-        for(User p: getPlayers()){
-            if (p.isSpectator()){
-                if (spe.isEmpty()) {
-                    List<User> temp = new ArrayList<>(Arrays.asList(p));
-                    spe = temp;
-                }
-                else{
-                    spe.add(p);
-                }
+        for (User p : getPlayers()) {
+            if (p.isSpectator()) {
+                spe.add(p);
             }
         }
         return spe;
     }
-
-
 }

@@ -1,0 +1,59 @@
+# English language file for Bowshot
+prefix: "&7[&6Bowshot&7]"
+
+game:
+  start-countdown: "&aGame starts in {seconds} seconds. Get ready!"
+  start: "&aStart"
+  force-ended: "The game has been forcefully ended."
+  returning: "Returning in 3 seconds..."
+  time-up: "&cTime is up! The player with the most kills wins."
+  glow-warning: "&c{minutes} minutes remaining. Enabling glow for faster gameplay."
+  not-found: "&cGame not found."
+
+match:
+  queue-count: "&aBowshot: {count}"
+  start-countdown: "Game starts in {seconds} seconds."
+  cancelled: "Matchmaking has been cancelled."
+
+scoreboard:
+  title: "&6&oBOWSHOT"
+  separator: "&7&m-------------------------"
+  remaining-players: "&eRemaining&f: "
+  remaining-time: "&eTime Left&f: "
+
+result:
+  game-set: "&e==========GAME SET=========="
+  winner: "winner: {name}"
+  no-winner: "winner: X"
+  kill: "&6kill: {name}"
+  no-kill: "&6kill: X"
+  score-gain: "&aSCORE GET: +{score}"
+  score-loss: "&cSCORE LOST: {score}"
+
+rank:
+  unranked: "&7Unranked"
+  bronze: "&6Bronze"
+  silver: "&7Silver"
+  gold: "&eGold"
+  platinum: "&bPlatinum"
+  diamond: "&3Diamond"
+  master: "&5Master"
+  grandmaster: "&dGrandmaster"
+  placement: "&8Placement ({current}/{total})"
+
+admin:
+  arena-created: "&6Arena created."
+  arena-removed: "&6Arena removed."
+  arena-exists: "&cThat arena already exists!"
+  arena-not-found: "&cThat arena doesn't exist!"
+  no-file: "&cNo File!"
+  player-only: "&cThis command can only be used by players."
+  unknown-command: "&cUnknown subcommand. Use /bowshotadmin help for a list of commands."
+  empty-list: "Empty"
+  done: "DONE"
+  saved: "SAVED"
+  wait: "Wait..."
+  deleting-world: "Deleting {name}"
+
+hologram:
+  ranking-title: "&aRANKING"

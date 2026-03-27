@@ -18,7 +18,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Bowshot extends JavaPlugin implements Listener {
 
-    public static final String PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "PVPGame" + ChatColor.GRAY + "]";
+    private ConfigManager configManager;
+    private MessageManager messageManager;
     public ArenaManager arenaManager;
     public SubArenaManager subarenaManager;
     public WorldManager worldManager;
@@ -39,6 +40,8 @@ public final class Bowshot extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        configManager = new ConfigManager(this);
+        messageManager = new MessageManager(this);
         locationmanager = new LocationManager(this);
         vw = new VisitWorld(this);
         spe = new spectator();
@@ -73,5 +76,11 @@ public final class Bowshot extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
 
+    public MessageManager getMessageManager() {
+        return messageManager;
+    }
 }

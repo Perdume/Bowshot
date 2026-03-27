@@ -92,7 +92,7 @@ public class Joinspect implements Listener {
             }
         }
         catch(Exception e2) {
-            p.sendMessage(ChatColor.RED + "게임을 찾을 수 없습니다");
+            p.sendMessage(bs.getMessageManager().get("game.not-found"));
             e2.printStackTrace();
         }
     }

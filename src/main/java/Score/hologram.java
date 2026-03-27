@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static eu.decentsoftware.holograms.api.Settings.getConfig;
-
 public class hologram {
     private Bowshot bs;
     public hologram(Bowshot bw){
@@ -18,14 +16,12 @@ public class hologram {
     }
     public List<String> sort(){
         List<String> sorting = new ArrayList<>();
-        sorting.add(0, ChatColor.GREEN + "RANKING");
-        HashMap<String, Integer> players = new HashMap<String, Integer>();
+        sorting.add(0, bs.getMessageManager().get("hologram.ranking-title"));
+        HashMap<String, Integer> players = new HashMap<>();
 
         for(OfflinePlayer playerName: Bukkit.getOfflinePlayers()){
-
             players.put(playerName.getName(), bs.scoremanager.getConfig().getInt(playerName.getUniqueId().toString()));
         }
-
 
         String nextTop = "";
         Integer nextTopKills = 0;

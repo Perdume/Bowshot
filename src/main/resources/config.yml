@@ -1,0 +1,23 @@
+# Bowshot Configuration
+# Language setting: ko (Korean), en (English)
+language: ko
+
+# Ranked system settings
+ranked:
+  # Number of placement matches before getting a rank
+  placement-matches: 10
+  # Base ELO score for new players
+  base-elo: 1500
+
+# Game settings
+game:
+  # Minimum players to start a match
+  min-players: 2
+  # Countdown time before match starts (seconds)
+  countdown: 20
+  # Preparation time after teleport (seconds)
+  prep-time: 15
+  # Match time limit (minutes)
+  time-limit: 5
+  # Glow effect time remaining (minutes)
+  glow-time: 3

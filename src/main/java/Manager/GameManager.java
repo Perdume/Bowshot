@@ -3,6 +3,7 @@ package Manager;
 import Area.Arena;
 import Area.SubArena;
 import Game.Game;
+import Game.GameUtil;
 import World.VisitToPlay;
 import World.WorldManage;
 import bowshot.bowshot.Bowshot;
@@ -60,11 +61,14 @@ public class GameManager{
     private SubArena GetRandomSubArena(){
         try {
             List<String> Areas = bs.arenaManager.getArenas();
-            int RandomInt = (int) (Math.random() * (Areas.size() + 1) - 1);
+            if (Areas.isEmpty()) {
+                return null;
+            }
+            int RandomInt = new Random().nextInt(Areas.size());
             Arena SelArena = bs.arenaManager.getArena(Areas.get(RandomInt));
             File fi = SelArena.getWorldLoader();
-            String MixedName = "Bowshot--PLAY--" + Randomname();
-            Path toFolder = Paths.get(Bukkit.getWorldContainer().getAbsolutePath() + "\\" + MixedName);
+            String MixedName = "Bowshot--PLAY--" + GameUtil.randomName();
+            Path toFolder = Paths.get(GameUtil.buildPath(Bukkit.getWorldContainer().getAbsolutePath(), MixedName));
             WorldManage wrma = new WorldManage();
             wrma.copyWorld(fi, toFolder.toFile());
             Files.move(toFolder, toFolder.resolveSibling(MixedName));
@@ -86,24 +90,27 @@ public class GameManager{
             public void run() {
                 for (World w: Bukkit.getWorlds()){
                     if (w.getName().contains("--PLAY--")){
-                        if(w.getPlayers().size() == 0){
-                            Bukkit.broadcastMessage("Deleting " + w.getName());
+                        if(w.getPlayers().isEmpty()){
+                            bs.getLogger().info(bs.getMessageManager().get("admin.deleting-world", "{name}", w.getName()));
                             Bukkit.unloadWorld(w, false);
                             WorldManage.deleteFilesRecursively(w.getWorldFolder());
                         }
                     }
                     if (w.getName().contains("--VISIT--")){
-                        if(w.getPlayers().size() == 0){
+                        if(w.getPlayers().isEmpty()){
                             Bukkit.unloadWorld(w, false);
                             WorldManage.deleteFilesRecursively(w.getWorldFolder());
                         }
                     }
                 }
-                for(File f: bs.getDataFolder().listFiles()){
-                    if (f.isDirectory()){
-                        if (f.getName().contains("--")){
-                            if (!ismatch(f)){
-                                WorldManage.deleteFilesRecursively(f);
+                File[] dataFiles = bs.getDataFolder().listFiles();
+                if (dataFiles != null) {
+                    for (File f : dataFiles) {
+                        if (f.isDirectory()) {
+                            if (f.getName().contains("--")) {
+                                if (!ismatch(f)) {
+                                    WorldManage.deleteFilesRecursively(f);
+                                }
                             }
                         }
                     }
@@ -137,18 +144,5 @@ public class GameManager{
             }
         }
         return false;
-    }
-    private String Randomname(){
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 10;
-        Random random = new Random();
-
-        String generatedString = random.ints(leftLimit,rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(targetStringLength)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
-        return generatedString;
     }
 }

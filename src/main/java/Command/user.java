@@ -1,6 +1,7 @@
 package Command;
 
 import Game.Joinspect;
+import Manager.MessageManager;
 import bowshot.bowshot.Bowshot;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,16 +17,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 public class user implements CommandExecutor {
-    private final String PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "Bowshot" + ChatColor.GRAY + "]";
     private Bowshot bs = Bowshot.getPlugin(Bowshot.class);
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player pl = (Player) sender;
+        MessageManager msg = bs.getMessageManager();
         if (bs.gamemanager.PlayerIsPlaying(pl)){
             return true;
         }
         if(args.length == 0) {
-            sender.sendMessage(PREFIX + ChatColor.GOLD + "Bowshot by Perdume");
+            sender.sendMessage(msg.get("prefix") + ChatColor.GOLD + " Bowshot by Perdume");
             return true;
         }
         if(args[0].equalsIgnoreCase("help")) {
@@ -33,8 +34,10 @@ public class user implements CommandExecutor {
         }
         if(args[0].equalsIgnoreCase("join")) {
             bs.match.join((Player) sender);
-            Bukkit.broadcastMessage(ChatColor.GREEN + "Bowshot: " + bs.match.getMatchingPlayers().size());
-            if (bs.match.getMatchingPlayers().size() == 2){
+            int count = bs.match.getMatchingPlayers().size();
+            Bukkit.broadcastMessage(msg.get("match.queue-count", "{count}", String.valueOf(count)));
+            int minPlayers = bs.getConfigManager().getMinPlayers();
+            if (count >= minPlayers){
                 AutoStart();
             }
             return true;
@@ -50,17 +53,20 @@ public class user implements CommandExecutor {
         return true;
     }
     private void AutoStart(){
+        MessageManager msg = bs.getMessageManager();
+        int countdown = bs.getConfigManager().getCountdown();
         for(Player p: bs.match.getMatchingPlayers()){
-            p.sendMessage("20초 뒤에 게임이 시작됩니다");
+            p.sendMessage(msg.get("match.start-countdown", "{seconds}", String.valueOf(countdown)));
         }
         new BukkitRunnable() {
-            int i = 20;
+            int i = countdown;
             @Override
             public void run() {
                 i--;
-                if (bs.match.getMatchingPlayers().size() < 2){
+                int minPlayers = bs.getConfigManager().getMinPlayers();
+                if (bs.match.getMatchingPlayers().size() < minPlayers){
                     for(Player p: bs.match.getMatchingPlayers()){
-                        p.sendMessage("매칭이 취소되었습니다");
+                        p.sendMessage(msg.get("match.cancelled"));
                         cancel();
                     }
                 }
