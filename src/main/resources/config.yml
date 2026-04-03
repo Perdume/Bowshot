@@ -1,0 +1,52 @@
+# Bowshot Configuration
+
+debug: false
+language: ko
+
+game:
+  min-players: 2
+  max-players: 8
+  match-countdown: 20
+  preparation-time: 15
+  duration: 315
+  glowing-time: 180
+
+score:
+  base-mmr: 0
+  placement-base: 25       # 배치 기본 점수 (1등 = 최대 획득)
+  kill-base: 5              # 킬당 기본 점수
+  mvp-bonus: 8              # MVP 보너스 (최다킬 2킬 이상)
+  entry-rate: 3             # 진입 비용 비율 (현재점수 * entry-rate / 100)
+  gain-scaling: 500         # 고점수 추가 감소 기준값 (500점 이상부터 감소 시작)
+  passive-penalty: 0.5      # 0킬 하위권 배치점수 배율
+  small-game-factor: 0.7    # 2~3인 게임 점수 배율
+  timeout-factor: 0.6       # 시간초과 생존자 보상 배율
+  disconnect-penalty: 15    # 접속끊김 추가 패널티
+  newbie-threshold: 100     # 뉴비 보호 기준 점수
+  newbie-loss-reduction: 0.3 # 뉴비 손실 감소 배율
+
+spectator:
+  allow-join: true
+  fly-speed: 1
+  invisible: true
+  show-items: true
+  teleport-on-death: true
+  night-vision: true
+
+replay:
+  enabled: true
+  auto-record: true
+  max-replays: 50
+  recording-interval: 4
+
+matchmaking:
+  mmr-range: 200           # 초기 MMR 매칭 범위 (±200)
+  mmr-expand-per-sec: 15   # 대기 1초당 범위 확대량
+  max-wait-seconds: 20     # 최대 대기 시간 (초과 시 선착순 매칭)
+
+anticheat:
+  enabled: true            # 안티치트 활성화
+  max-reach: 4.5           # 최대 근접 공격 거리 (블록)
+  max-speed: 15.0          # 최대 이동 속도 (블록/초)
+  max-cps: 20              # 최대 초당 클릭 수
+  violation-threshold: 10  # 게임 제외 위반 횟수

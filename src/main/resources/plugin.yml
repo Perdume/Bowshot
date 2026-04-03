@@ -1,13 +1,22 @@
 name: Bowshot
 version: '${project.version}'
-main: bowshot.bowshot.Bowshot
-api-version: 1.19
+main: bowshot.Bowshot
+api-version: '26.1'
 authors: [ Perdume ]
+softdepend: [ FancyHolograms, PlaceholderAPI, Vault, WorldGuard, LuckPerms, Essentials ]
 
 commands:
-  Bowshot:
-    usage: "/Bowshot"
-    description: Bowshot
-  bowshotadmin:
-    usage: "?"
-    description: Bowshot admin
+  bs:
+    usage: "/bs <join|leave|spect|stats|replay>"
+    description: Bowshot user command
+    aliases: [ bowshot ]
+  bsa:
+    usage: "/bsa <help>"
+    description: Bowshot admin command
+    permission: bowshot.admin
+    aliases: [ bowshotadmin ]
+
+permissions:
+  bowshot.admin:
+    description: Access to admin commands
+    default: op

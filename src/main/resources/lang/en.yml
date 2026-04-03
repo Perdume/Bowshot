@@ -1,0 +1,225 @@
+# Bowshot English Language File
+
+# General
+prefix: "&6[Bowshot]&r"
+plugin:
+  info: "&6Bowshot &7- Bow PvP Minigame"
+
+# Matchmaking
+match:
+  joined: "&aYou joined the match queue."
+  left: "&cYou left the match queue."
+  already:
+    in: "&cYou are already in the queue."
+  not:
+    in: "&cYou are not in the queue."
+  player:
+    count: "&eQueue: &f{0} players"
+  countdown:
+    start: "&aMatch starting in {0} seconds!"
+    cancelled: "&cMatch cancelled due to insufficient players."
+    tick: "&eMatch starting in &c{0}s"
+  queue:
+    actionbar: "Matching... &f[{0}s] &7| Waiting: &b{1}"
+    waiting: "Waiting: &f{0}"
+    searching:
+      1: "Searching for opponents"
+      2: "with similar skill..."
+
+# Game
+game:
+  preparing: "&ePreparing game..."
+  countdown: "&6Game starts in &c{0}s"
+  start: "&aGame started!"
+  force:
+    ended: "&cGame has been force ended."
+  glowing:
+    warning: "&eAll players will glow in 30 seconds!"
+  time:
+    over: "&cTime is up!"
+  return:
+    countdown: "&eReturning to lobby in {0}s."
+  score:
+    display: "&e{0} &7- &f{1} pts"
+  set:
+    header: "&6========== Game Result =========="
+    winner: "&eWinner: &a{0}"
+    mvp: "&eMVP: &b{0} &7({1} kills)"
+    no:
+      mvp: "&7No MVP"
+    footer: "&6================================="
+
+# Score
+score:
+  gained: "&a+{0} Score"
+  lost: "&c{0} Score"
+
+# Kill Feed
+kill:
+  message: "&c{0} &7<- &e{1}"
+  environment: "&c{0} &7died"
+
+# Scoreboard
+scoreboard:
+  title: "&6&lBowshot"
+  remaining: "&fAlive: &a{0}"
+  time: "&fTime: &e{0}"
+
+# Admin
+admin:
+  arena:
+    created: "&aArena created."
+    removed: "&cArena removed."
+    exists: "&cArena already exists."
+    not:
+      found: "&cArena not found."
+  no:
+    file: "&cWorld file not found."
+  spawn:
+    set: "&aSpawn location set."
+  end:
+    location:
+      set: "&aEnd location set."
+  world:
+    saved: "&aWorld saved."
+  score:
+    set: "&aScore has been set."
+  usage:
+    add: "&cUsage: /bsa add <name> <worldfile>"
+    remove: "&cUsage: /bsa remove <name>"
+  players:
+    only: "&cPlayers only."
+  unknown:
+    command: "&cUnknown command."
+  wait: "&cPlease wait."
+  mission:
+    reset: "&aReset {1} missions for {0}."
+    resetall: "&aReset {0} missions for all players."
+  achievement:
+    grant: "&aGranted achievement {1} to {0}."
+    reset: "&aReset achievements for {0}."
+  title:
+    created: "&aTitle &e{0}&a created."
+    removed: "&cTitle &e{0}&c removed."
+    granted: "&aGranted title &e{1}&a to {0}."
+    revoked: "&aRevoked title &e{1}&a from {0}."
+    list: "&6===== Registered Titles ====="
+    listentry: "&7 - &e{0}&7: {1}"
+    exists: "&cTitle already exists."
+    not:
+      found: "&cTitle not found."
+  effect:
+    created: "&aEffect &e{0}&a created."
+    removed: "&cEffect &e{0}&c removed."
+    granted: "&aGranted effect &e{1}&a to {0}."
+    revoked: "&aRevoked effect &e{1}&a from {0}."
+    list: "&6===== Registered Effects ====="
+    listentry: "&7 - &e{0}&7: {1} ({2})"
+    exists: "&cEffect already exists."
+    not:
+      found: "&cEffect not found."
+
+# Spectator
+spectator:
+  game:
+    not:
+      found: "&cGame not found."
+  player:
+    tp: "&aTeleporting to {0}."
+  join:
+    disabled: "&cSpectator join is disabled."
+
+# Visit
+visit:
+  loading: "&eLoading map..."
+  teleported: "&aTeleported to map. Use /bs leave to exit."
+  left: "&cLeft map visit."
+  no:
+    arenas: "&cNo arenas registered."
+
+# Replay
+replay:
+  started: "&aReplay started. Use items to control playback."
+  ended: "&eReplay has ended."
+  paused: "&eReplay paused."
+  resumed: "&aReplay resumed."
+  speed: "&ePlayback speed: x{0}"
+  not:
+    found: "&cReplay not found."
+  stopped: "&cReplay stopped."
+  list:
+    empty: "&cNo saved replays."
+
+# Stats
+stats:
+  header: "&6===== My Stats ====="
+  wins: "&fWins: &a{0}"
+  losses: "&fLosses: &c{0}"
+  kills: "&fKills: &e{0}"
+  deaths: "&fDeaths: &e{0}"
+  games:
+    played: "&fGames: &f{0}"
+  mmr: "&fMMR: &b{0}"
+  footer: "&6===================="
+
+# Mission
+mission:
+  header: "&6===== Missions ====="
+  daily:
+    header: "&e> Daily Missions"
+  weekly:
+    header: "&e> Weekly Missions"
+  entry:
+    progress: "&7 - {0} &8[&a{1}&8/&a{2}&8] &f+{3} pts"
+    done: "&7 - &a✔ {0} &8[&aDone&8] &6/bs mission claim {1}"
+  complete: "&aMission complete! &e{0} &7- Use /bs mission claim to collect reward."
+  reward:
+    claimed: "&a+{0} pts reward claimed!"
+  already:
+    claimed: "&cReward already claimed."
+  not:
+    done: "&cMission not yet completed."
+    found: "&cMission not found."
+  footer: "&6====================="
+
+# Achievement
+achievement:
+  header: "&6===== Achievements ({0}/{1}) ====="
+  entry:
+    progress: "&7 - {0} &8[&e{1}&8/&e{2}&8] &f{3}"
+    unlocked: "&7 - &a✔ {0} &f+{1} pts &6/bs achievement claim {2}"
+    claimed: "&7 - &a✔ {0} &8(Claimed)"
+  unlocked: "&6&lAchievement Unlocked! &e{0}"
+  reward:
+    claimed: "&a+{0} pts achievement reward claimed!"
+  already:
+    claimed: "&cReward already claimed."
+  not:
+    unlocked: "&cAchievement not yet unlocked."
+    found: "&cAchievement not found."
+  summary: "&7{0}: &e{1}&8/&e{2}"
+  footer: "&6==========================="
+
+# Title (Cosmetic)
+title:
+  header: "&6===== Titles ====="
+  item: "&7 - {0} &8({1})"
+  itemequipped: "&a ✔ {0} &8({1}) &e[Equipped]"
+  equip: "&aEquipped title &e{0}&a."
+  unequip: "&cTitle unequipped."
+  none: "&7You have no titles."
+  not:
+    owned: "&cYou don't own this title."
+    found: "&cTitle not found."
+
+# Effect (Cosmetic)
+effect:
+  header: "&6===== Effects ====="
+  item: "&7 - {0} &8({1})"
+  itemequipped: "&a ✔ {0} &8({1}) &e[Equipped]"
+  equip: "&aEquipped effect &e{0}&a."
+  unequip: "&cEffect unequipped."
+  none: "&7You have no effects."
+  not:
+    owned: "&cYou don't own this effect."
+    found: "&cEffect not found."
